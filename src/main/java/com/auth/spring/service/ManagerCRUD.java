@@ -1,4 +1,4 @@
-package com.auth.spring.impl;
+package com.auth.spring.service;
 
 import java.util.Optional;
 
