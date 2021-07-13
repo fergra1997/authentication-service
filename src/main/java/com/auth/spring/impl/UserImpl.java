@@ -11,7 +11,7 @@ import com.auth.spring.interfaces.UserInterface;
 import com.auth.spring.utility.UserUtility;
 
 @Service
-public class StudentImpl extends ManagerCRUD implements UserInterface {
+public class UserImpl extends ManagerCRUD implements UserInterface {
 
 	private ReturnCode returnCode;
 
@@ -20,7 +20,7 @@ public class StudentImpl extends ManagerCRUD implements UserInterface {
 
 	private UserUtility utility;
 
-	public StudentImpl() {
+	public UserImpl() {
 		utility = new UserUtility();
 	}
 
@@ -31,10 +31,15 @@ public class StudentImpl extends ManagerCRUD implements UserInterface {
 	public UserDto read(String id) {
 		UserDto foundStudent = null;
 		ReturnCode returnCode = ReturnCode.ERROR;
-		UserEntity studentEntity = read(id, userDao);
+		//UserEntity studentEntity = read(id, userDao);
+		UserEntity user=new UserEntity();
+		user.setId("1");
+		user.setAge(13);
+		user.setName("Fernando");
+		user.setSurname("Granato");
 		returnCode = getDaoReturnCode();
 		if (returnCode.equals(ReturnCode.OK))
-			foundStudent = utility.entityToDto(studentEntity);
+			foundStudent = utility.entityToDto(user);
 
 		setReturnCode(returnCode);
 		return foundStudent;
