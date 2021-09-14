@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.auth.spring.dao.AuthorityRepository;
 import com.auth.spring.dao.UserRepository;
 import com.auth.spring.dto.ReturnCode;
 import com.auth.spring.dto.UserDto;
-import com.auth.spring.interfaces.UserInterface;
 import com.auth.spring.model.Authority;
 import com.auth.spring.model.AuthorityName;
 import com.auth.spring.model.User;
 
 @Service
-public class UserImpl extends ManagerCRUD implements UserInterface {
+public class UserImpl extends ManagerCRUD {
 
 	private ReturnCode returnCode;
 
@@ -25,36 +25,32 @@ public class UserImpl extends ManagerCRUD implements UserInterface {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	//private UserUtility utility;
-
-	public UserImpl() {
-	//	utility = new UserUtility();
+	
+	@Autowired
+	private AuthorityRepository authority;
+	
+	
+	public UserDto read(String id) {
+		UserDto user = null;
+		ReturnCode returnCode = ReturnCode.ERROR;
+		User userEntity = read(id, userDao);
+		System.out.println("user entity  + " + userEntity.toString());
+		returnCode = getDaoReturnCode();
+		if (returnCode.equals(ReturnCode.OK)) {
+			user =new UserDto();
+			user.setUsername(userEntity.getUsername());
+		}else {
+			returnCode=ReturnCode.NOT_FOUND;
+		}
+		setReturnCode(returnCode);
+		return user;
 	}
 
 	
-	@Override
-	public UserDto read(String id) {
-		UserDto foundStudent = null;
-		ReturnCode returnCode = ReturnCode.ERROR;
-		User userEntity = read(id, userDao);
-		returnCode = getDaoReturnCode();
-		if (returnCode.equals(ReturnCode.OK)) {
-			UserDto dto =new UserDto();
-			dto.setUsername(userEntity.getUsername());
-		}
-		setReturnCode(returnCode);
-		return foundStudent;
-	}
-
-	@Override
 	public ReturnCode create(UserDto user) {
 		ReturnCode returnCode = ReturnCode.ERROR;
-		Authority authorityAdmin = new Authority();
-		authorityAdmin.setName(AuthorityName.ROLE_ADMIN);
-		Authority authorityUser = new Authority();
-		authorityUser.setName(AuthorityName.ROLE_USER);
-		List<Authority> authorities = Arrays.asList(new Authority[] { authorityAdmin, authorityUser });
+		Authority authorityAdmin=read(new Long(1),authority);
+		List<Authority> authorities = Arrays.asList(new Authority[] { authorityAdmin });
 		User userEntity = new User();
 		userEntity = new User();
 		userEntity.setAuthorities(authorities);
@@ -69,7 +65,7 @@ public class UserImpl extends ManagerCRUD implements UserInterface {
 		return returnCode;
 	}
 
-	@Override
+	
 	public ReturnCode update(UserDto student, String id) {
 //		ReturnCode returnCode = ReturnCode.ERROR;
 //		UserEntity entity = utility.dtoToEntity(student);
@@ -79,7 +75,7 @@ public class UserImpl extends ManagerCRUD implements UserInterface {
 		return returnCode;
 	}
 
-	@Override
+	
 	public ReturnCode delete(String id) {
 //		ReturnCode returnCode = ReturnCode.ERROR;
 //		delete(id, userDao);
@@ -88,12 +84,12 @@ public class UserImpl extends ManagerCRUD implements UserInterface {
 		return returnCode;
 	}
 
-	@Override
+	
 	public ReturnCode getReturnCode() {
 		return this.returnCode;
 	}
 
-	@Override
+	
 	public void setReturnCode(ReturnCode returnCode) {
 		this.returnCode = returnCode;
 

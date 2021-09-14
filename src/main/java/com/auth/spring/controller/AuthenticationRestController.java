@@ -51,20 +51,14 @@ public class AuthenticationRestController {
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // Genero Token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         response.setHeader(tokenHeader,token);
-        // Ritorno il token
         return ResponseEntity.ok(new JwtAuthenticationResponse(userDetails.getUsername(),userDetails.getAuthorities()));
     }
 
     
-    
-    
-    
-    
-    @RequestMapping(value = "protected/refresh-token", method = RequestMethod.GET)
+    @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader(tokenHeader);
         UserDetails userDetails =

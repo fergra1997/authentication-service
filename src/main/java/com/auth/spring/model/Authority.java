@@ -1,4 +1,5 @@
 package com.auth.spring.model;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -10,40 +11,40 @@ import java.util.List;
 @Table(name = "AUTHORITIES")
 public class Authority {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@Column(name = "ID")
+	private Long id;
 
-    @Column(name = "NAME", length = 50)
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private AuthorityName name;
+	@Column(name = "NAME", length = 50)
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private AuthorityName name;
 
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<User> users;
+	@ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY, cascade = CascadeType.ALL )
+	@JsonBackReference
+	private List<User> users;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public AuthorityName getName() {
-        return name;
-    }
+	public AuthorityName getName() {
+		return name;
+	}
 
-    public void setName(AuthorityName name) {
-        this.name = name;
-    }
+	public void setName(AuthorityName name) {
+		this.name = name;
+	}
 
-    public List<User> getUsers() {
-        return users;
-    }
+	public List<User> getUsers() {
+		return users;
+	}
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 }

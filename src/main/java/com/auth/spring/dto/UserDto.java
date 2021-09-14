@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JacksonInject;
 import lombok.Data;
 
 @Data
-public class UserDto implements Serializable{
+public class UserDto implements Serializable {
 	
 	
 	private static final long serialVersionUID = -7077125552140791426L;

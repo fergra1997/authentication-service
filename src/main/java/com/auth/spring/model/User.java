@@ -1,4 +1,5 @@
 package com.auth.spring.model;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,27 +25,23 @@ import lombok.NoArgsConstructor;
 @Table(name = "USERS")
 public class User {
 
+	@Id
+	@Column(name = "USERNAME", length = 50, unique = true)
+	@NotNull
+	private String username;
 
-    @Id
-    @Column(name = "USERNAME", length = 50, unique = true)
-    @NotNull
-    @Size(min = 4, max = 50)
-    private String username;
+	@Column(name = "PASSWORD", length = 100)
+	@NotNull
+	private String password;
 
-    @Column(name = "PASSWORD", length = 100)
-    @NotNull
-    @Size(min = 4, max = 100)
-    private String password;
+	@Column(name = "ENABLED")
+	@NotNull
+	private Boolean enabled;
 
-    @Column(name = "ENABLED")
-    @NotNull
-    private Boolean enabled;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "USERS_AUTHORITIES",
-            joinColumns = {@JoinColumn(name = "USER_USERNAME", referencedColumnName = "USERNAME")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    private List<Authority> authorities;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "USERS_AUTHORITIES", joinColumns = {
+			@JoinColumn(name = "USER_USERNAME", referencedColumnName = "USERNAME") }, inverseJoinColumns = {
+					@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID") })
+	private List<Authority> authorities;
 
 }
