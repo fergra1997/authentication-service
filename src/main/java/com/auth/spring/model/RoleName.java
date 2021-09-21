@@ -1,5 +1,5 @@
 package com.auth.spring.model;
 
-public enum AuthorityName {
+public enum RoleName {
     ROLE_USER, ROLE_PRINCIPAL, ROLE_ADMIN
 }
