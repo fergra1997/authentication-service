@@ -46,7 +46,7 @@ public class UserImpl extends ManagerCRUD {
 
 			if (returnCode.toString().equals(ReturnCode.OK.toString())) {
 				user = new UserDto();
-				user=converUserEntityToDto(userEntity);
+				user = converUserEntityToDto(userEntity);
 			} else {
 				returnCode = ReturnCode.NOT_FOUND;
 				System.out.println("User with id : " + id + " not found");
@@ -65,7 +65,7 @@ public class UserImpl extends ManagerCRUD {
 	 * @return operation returnCode.
 	 */
 	public ReturnCode create(UserDto user) {
-	returnCode = ReturnCode.ERROR;
+		returnCode = ReturnCode.ERROR;
 		try {
 			User entity = userDao.findByUsername(user.getUsername());
 			if (entity == null) {
@@ -75,7 +75,7 @@ public class UserImpl extends ManagerCRUD {
 				roles.add(role);
 				entity.setRoles(roles);
 				userDao.save(entity);
-				returnCode = ReturnCode.OK;
+				returnCode = ReturnCode.CREATED;
 			} else {
 				returnCode = ReturnCode.ALREDY_EXIST;
 				System.out.println("User with id : " + user.getUsername() + " already exist");
@@ -86,6 +86,58 @@ public class UserImpl extends ManagerCRUD {
 		setReturnCode(returnCode);
 		return returnCode;
 	}
+	
+	/**
+	 * The method used for update a new user.
+	 * 
+	 * @param user the user dto to update.
+	 * @return operation returnCode.
+	 */
+	public ReturnCode update(UserDto user, Integer id) {
+		returnCode = ReturnCode.ERROR;
+		try {
+			User entity = read(id, userDao);
+			returnCode = getDaoReturnCode();
+			if (returnCode.toString().equals(ReturnCode.OK.toString())) {
+				entity = converUserDtoToEntityToUpdate(user, entity);
+				userDao.save(entity);
+				returnCode = ReturnCode.OK;
+			} else {
+				returnCode = ReturnCode.NOT_FOUND;
+				System.out.println("User with id : " + id + " not found");
+			}
+		} catch (Exception e) {
+			System.out.println("Exception into update user an exception occurred  " + e);
+		}
+		setReturnCode(returnCode);
+		return returnCode;
+	}
+	
+	/**
+	 * The method used for delete a user.
+	 * 
+	 * @param id the user to delete.
+	 * @return operation returnCode.
+	 */
+	public ReturnCode delete(Integer id) {
+		returnCode = ReturnCode.ERROR;
+		try {
+			User userEntity = read(id, userDao);
+			returnCode = getDaoReturnCode();
+			if (returnCode.toString().equals(ReturnCode.OK.toString())) {
+				userDao.delete(userEntity);
+				returnCode = ReturnCode.DELETED;
+			} else {
+				returnCode = ReturnCode.NOT_FOUND;
+				System.out.println("User with id : " + id + " not found");
+			}
+		} catch (Exception e) {
+			System.out.println("Exception into create user an exception occurred  " + e);
+		}
+		setReturnCode(returnCode);
+		return returnCode;
+	}
+
 
 	public User converUserDtoToEntity(UserDto dto) {
 		User entity = new User();
@@ -93,14 +145,27 @@ public class UserImpl extends ManagerCRUD {
 		entity.setUsername(dto.getUsername());
 		entity.setSurname(dto.getSurname());
 		entity.setEmail(dto.getEmail());
-		entity.setEnabled(true);
 		entity.setCity(dto.getCity());
 		entity.setCountry(dto.getCountry());
 		entity.setSex(dto.getSex());
+		entity.setDateOfBirth(dto.getDateOfBirth());
+
+		entity.setEnabled(true);
 		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity.setInscriptionDate(new Date());
-		entity.setDateOfBirth(dto.getDateOfBirth());
 		return entity;
+	}
+
+	public User converUserDtoToEntityToUpdate(UserDto dto, User oldEntity) {
+		oldEntity.setName(dto.getName());
+		oldEntity.setUsername(dto.getUsername());
+		oldEntity.setSurname(dto.getSurname());
+		oldEntity.setEmail(dto.getEmail());
+		oldEntity.setCity(dto.getCity());
+		oldEntity.setCountry(dto.getCountry());
+		oldEntity.setSex(dto.getSex());
+		oldEntity.setDateOfBirth(dto.getDateOfBirth());
+		return oldEntity;
 	}
 
 	public UserDto converUserEntityToDto(User entity) {
@@ -118,25 +183,6 @@ public class UserImpl extends ManagerCRUD {
 		return dto;
 	}
 
-	public ReturnCode update(UserDto user, Integer id) {
-//		ReturnCode returnCode = ReturnCode.ERROR;
-//		UserEntity entity = utility.dtoToEntity(student);
-//		update(entity, id, userDao);
-//		returnCode = getDaoReturnCode();
-//		setReturnCode(returnCode);
-		return returnCode;
-	}
-
-	public ReturnCode delete(String id) {
-//		ReturnCode returnCode = ReturnCode.ERROR;
-//		delete(id, userDao);
-//		returnCode = getDaoReturnCode();
-//		setReturnCode(returnCode);
-		return returnCode;
-	}
-	
-	
-	
 
 	public ReturnCode getReturnCode() {
 		return this.returnCode;

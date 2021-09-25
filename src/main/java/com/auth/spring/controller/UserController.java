@@ -40,7 +40,6 @@ public class UserController extends BaseEndPoint {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDto> read(@PathVariable Integer id) {
-		System.out.println("eccolo");
 		UserDto foundStudent = userImplementation.read(id);
 		ResponseEntity<UserDto> response = managerResponseBuilderRead(foundStudent, userImplementation.getReturnCode(), null);
 		return response;
@@ -54,7 +53,7 @@ public class UserController extends BaseEndPoint {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ReturnCode> delete(@PathVariable String id) {
+	public ResponseEntity<ReturnCode> delete(@PathVariable Integer id) {
 		ReturnCode returnCode = userImplementation.delete(id);
 		ResponseEntity<ReturnCode> response = managerResponseBuilderDelete(returnCode, null);
 		return response;
