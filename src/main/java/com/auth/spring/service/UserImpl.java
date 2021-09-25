@@ -149,7 +149,6 @@ public class UserImpl extends ManagerCRUD {
 		entity.setCountry(dto.getCountry());
 		entity.setSex(dto.getSex());
 		entity.setDateOfBirth(dto.getDateOfBirth());
-
 		entity.setEnabled(true);
 		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity.setInscriptionDate(new Date());

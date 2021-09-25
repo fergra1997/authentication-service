@@ -1,0 +1,42 @@
+CREATE DATABASE `auth_database`;
+
+USE `auth_database`;
+
+
+CREATE TABLE auth_database.`user` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `USERNAME` varchar(64) NOT NULL,
+  `NAME` varchar(64) NOT NULL,
+  `SURNAME` varchar(64) NOT NULL,
+  `EMAIL` varchar(64) NOT NULL,
+  `DATE_OF_BIRTH` datetime NOT NULL,
+  `SEX` varchar(6) NOT NULL,
+  `COUNTRY` varchar(64) DEFAULT NULL,
+  `CITY` varchar(64) DEFAULT NULL,
+  `OLD_PASSWORD` varchar(64) DEFAULT NULL,
+  `PASSWORD` varchar(100) NOT NULL,
+  `PASSOWORD_ATTEMPTS` int(11) DEFAULT NULL,
+  `ENABLED` tinyint(1) NOT NULL DEFAULT '0',
+  `INSCRIPTION_DATE` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- auth_database.`role` definition
+
+CREATE table  auth_database.`role` (
+  `ID` int(11) NOT NULL,
+  `ROLE_NAME` varchar(64) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- auth_database.user_role definition
+
+CREATE TABLE auth_database.`user_role` (
+  `USER_ID` int(11) NOT NULL,
+  `ROLE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`USER_ID`,`ROLE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO auth_database.`role` (ID, ROLE_NAME) VALUES(1, 'ROLE_USER');
+INSERT INTO auth_database.`role`(ID, ROLE_NAME) VALUES(2, 'ROLE_ADMIN');
+
