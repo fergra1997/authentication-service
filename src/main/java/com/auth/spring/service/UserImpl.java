@@ -17,7 +17,6 @@ import com.auth.spring.model.Role;
 import com.auth.spring.model.RoleName;
 import com.auth.spring.model.User;
 
-
 @Service
 public class UserImpl extends ManagerCRUD {
 
@@ -31,28 +30,29 @@ public class UserImpl extends ManagerCRUD {
 
 	@Autowired
 	private RoleRepository roleDao;
-	
+
 	/**
 	 * The method used for read an instance of user.
 	 * 
 	 * @param id the id used for search.
 	 * @return the user dto.
 	 */
-	public UserDto read(String id) {
+	public UserDto read(Integer id) {
+		returnCode = ReturnCode.ERROR;
 		UserDto user = null;
 		try {
-			ReturnCode returnCode = ReturnCode.ERROR;
 			User userEntity = read(id, userDao);
 			returnCode = getDaoReturnCode();
-			if (returnCode.equals(ReturnCode.OK)) {
+
+			if (returnCode.toString().equals(ReturnCode.OK.toString())) {
 				user = new UserDto();
-				user.setUsername(userEntity.getUsername());
+				user=converUserEntityToDto(userEntity);
 			} else {
 				returnCode = ReturnCode.NOT_FOUND;
 				System.out.println("User with id : " + id + " not found");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception into read user an exception occurred");
+			System.out.println("Exception into read user an exception occurred" + e);
 		}
 		setReturnCode(returnCode);
 		return user;
@@ -65,14 +65,13 @@ public class UserImpl extends ManagerCRUD {
 	 * @return operation returnCode.
 	 */
 	public ReturnCode create(UserDto user) {
-		ReturnCode returnCode = ReturnCode.ERROR;
+	returnCode = ReturnCode.ERROR;
 		try {
 			User entity = userDao.findByUsername(user.getUsername());
 			if (entity == null) {
 				entity = converUserDtoToEntity(user);
 				List<Role> roles = new ArrayList<>();
-				Role role=roleDao.findByName(RoleName.ROLE_USER);
-				System.out.println(role.toString());
+				Role role = roleDao.findByName(RoleName.ROLE_USER);
 				roles.add(role);
 				entity.setRoles(roles);
 				userDao.save(entity);
@@ -119,7 +118,7 @@ public class UserImpl extends ManagerCRUD {
 		return dto;
 	}
 
-	public ReturnCode update(UserDto user, String id) {
+	public ReturnCode update(UserDto user, Integer id) {
 //		ReturnCode returnCode = ReturnCode.ERROR;
 //		UserEntity entity = utility.dtoToEntity(student);
 //		update(entity, id, userDao);
@@ -135,6 +134,9 @@ public class UserImpl extends ManagerCRUD {
 //		setReturnCode(returnCode);
 		return returnCode;
 	}
+	
+	
+	
 
 	public ReturnCode getReturnCode() {
 		return this.returnCode;

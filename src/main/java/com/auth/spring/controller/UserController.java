@@ -31,8 +31,15 @@ public class UserController extends BaseEndPoint {
 		return response;
 	}
 	
+	@PostMapping("/createAdminAccount")
+	public ResponseEntity<ReturnCode> createAdmin(@RequestBody @Validated UserDto user) {
+		ReturnCode returnCode = userImplementation.create(user);
+		ResponseEntity<ReturnCode> response = managerResponseBuilderCreate(returnCode, null);
+		return response;
+	}
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDto> read(@PathVariable String id) {
+	public ResponseEntity<UserDto> read(@PathVariable Integer id) {
 		System.out.println("eccolo");
 		UserDto foundStudent = userImplementation.read(id);
 		ResponseEntity<UserDto> response = managerResponseBuilderRead(foundStudent, userImplementation.getReturnCode(), null);
@@ -40,7 +47,7 @@ public class UserController extends BaseEndPoint {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReturnCode> update(@RequestBody @Validated UserDto user, @PathVariable String id) {
+	public ResponseEntity<ReturnCode> update(@RequestBody @Validated UserDto user, @PathVariable Integer id) {
 		ReturnCode returnCode = userImplementation.update(user, id);
 		ResponseEntity<ReturnCode> response = managerResponseBuilderUpdate(returnCode, null);
 		return response;
