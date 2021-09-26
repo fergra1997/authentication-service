@@ -17,7 +17,10 @@ import com.auth.spring.model.Role;
 import com.auth.spring.model.RoleName;
 import com.auth.spring.model.User;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class UserImpl extends ManagerCRUD {
 
 	private ReturnCode returnCode;
@@ -49,10 +52,10 @@ public class UserImpl extends ManagerCRUD {
 				user = converUserEntityToDto(userEntity);
 			} else {
 				returnCode = ReturnCode.NOT_FOUND;
-				System.out.println("User with id : " + id + " not found");
+				log.warn("User with id : {}  not found", id);
 			}
 		} catch (Exception e) {
-			System.out.println("Exception into read user an exception occurred" + e);
+			log.error("Exception into read user an exception occurred" + e);
 		}
 		setReturnCode(returnCode);
 		return user;
@@ -78,15 +81,15 @@ public class UserImpl extends ManagerCRUD {
 				returnCode = ReturnCode.CREATED;
 			} else {
 				returnCode = ReturnCode.ALREDY_EXIST;
-				System.out.println("User with id : " + user.getUsername() + " already exist");
+				log.warn("User with id : " + user.getUsername() + " already exist");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception into create user an exception occurred  " + e);
+			log.error("Exception into create user an exception occurred  " + e);
 		}
 		setReturnCode(returnCode);
 		return returnCode;
 	}
-	
+
 	/**
 	 * The method used for update a new user.
 	 * 
@@ -104,15 +107,15 @@ public class UserImpl extends ManagerCRUD {
 				returnCode = ReturnCode.OK;
 			} else {
 				returnCode = ReturnCode.NOT_FOUND;
-				System.out.println("User with id : " + id + " not found");
+				log.warn("User with id : " + id + " not found");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception into update user an exception occurred  " + e);
+			log.error("Exception into update user an exception occurred  " + e);
 		}
 		setReturnCode(returnCode);
 		return returnCode;
 	}
-	
+
 	/**
 	 * The method used for delete a user.
 	 * 
@@ -129,15 +132,14 @@ public class UserImpl extends ManagerCRUD {
 				returnCode = ReturnCode.DELETED;
 			} else {
 				returnCode = ReturnCode.NOT_FOUND;
-				System.out.println("User with id : " + id + " not found");
+				log.warn("User with id : " + id + " not found");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception into create user an exception occurred  " + e);
+			log.error("Exception into delete user an exception occurred  " + e);
 		}
 		setReturnCode(returnCode);
 		return returnCode;
 	}
-
 
 	public User converUserDtoToEntity(UserDto dto) {
 		User entity = new User();
@@ -181,7 +183,6 @@ public class UserImpl extends ManagerCRUD {
 		dto.setRoles(roles);
 		return dto;
 	}
-
 
 	public ReturnCode getReturnCode() {
 		return this.returnCode;

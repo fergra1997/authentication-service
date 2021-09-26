@@ -71,6 +71,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login")
                 	.permitAll()
+                .antMatchers("/user/createAccount")
+                	.permitAll()
                 .antMatchers("/user/createAdminAccount")
                 	.hasAuthority(RoleName.ROLE_ADMIN.toString())
                 .anyRequest()
